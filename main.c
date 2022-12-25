@@ -14,3 +14,10 @@ struct Chapter
     char content[MAX_CONTENT_LEN];
     struct Chapter *next;
 };
+
+
+int main(int argc, char const *argv[])
+{
+    printf("hello");
+    return 0;
+}
