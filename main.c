@@ -15,6 +15,7 @@ struct Chapter
     struct Chapter *next;
 };
 
+
 // Linked list to store the chapters of the book
 struct ChapterList
 {
