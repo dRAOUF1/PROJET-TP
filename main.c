@@ -86,8 +86,10 @@ void Ajouter_Chapitre(Livre *livre, int pos)
 
         // cas 2.2:position non trouvé
         else
+        {
             P = (*livre)->Suivant;
-        Ajouter_Chapitre(&P, pos - 1);
+            Ajouter_Chapitre(&P, pos - 1);
+        }
     }
 }
 
@@ -107,6 +109,23 @@ void Afficher_Chapitre_Id(Livre l)
         Afficher_Chapitre_Id(l->Suivant);
     }
 }
+
+// void Suprrimer_Chapitre(Livre *l, int pos)
+// {
+//     //cas 1: Liste vide donc ne rien faire
+//     if (*l != NULL)
+//     {   //cas 2: liste non vide
+//         if (pos -1 == 1)
+//         {
+//             //cas 2.1: position trouvé
+//         }
+//         else
+//         {
+//             //cas 2.2: position non trouvé
+
+//         }
+//     }
+// }
 
 void Modifier(Livre l, int id)
 {
