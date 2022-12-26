@@ -64,7 +64,7 @@ void Ajouter_Chapitre(Livre *livre, int pos)
     }
 
     // cas 2:livre deja existant
-    else if (pos - 1 > 0)
+    else
     {
         // cas 2.1:position trouvé
         if (pos - 1 == 1)
@@ -86,8 +86,10 @@ void Ajouter_Chapitre(Livre *livre, int pos)
 
         // cas 2.2:position non trouvé
         else
+        {
             P = (*livre)->Suivant;
-        Ajouter_Chapitre(&P, pos - 1);
+            Ajouter_Chapitre(&P, pos - 1);
+        }
     }
 }
 
@@ -105,6 +107,54 @@ void Afficher_Chapitre_Id(Livre l)
     {
         Afficher_Chapitre(l->Info);
         Afficher_Chapitre_Id(l->Suivant);
+    }
+}
+
+// Fonction qui decremonte les id apres l'insertion d'un chapitre si nécessaire
+void dec_id(Livre Q)
+{
+    if (Q->Info.id != 1)
+    {
+        Q->Info.id--;
+        dec_id(Q->Suivant);
+    }
+}
+void Suprrimer_Chapitre(Livre *l, int pos)
+{
+    // cas 1: Liste vide donc ne rien faire
+    if (*l != NULL)
+    { // cas 2: liste non vide
+        // cas 2.1: suprrimer la tete
+        if (pos - 1 == 0)
+        {
+            Livre P = (*l);
+            // dec_id((*l)->Suivant);
+            (*l) = (*l)->Suivant;
+            while(P->Suivant->Info.id!=1){
+                P=P->Suivant;
+            }
+            P->Suivant=(*l);
+            strcpy(P->Info.Titre_Chapitre_Suivant,(*l)->Info.titre);
+            dec_id(*l);
+        }
+        else
+        {
+            if (pos - 1 == 1)
+            {
+                // cas 2.2: position trouvé non tete
+                Livre P = (*l)->Suivant;
+                (*l)->Suivant = P->Suivant;
+                strcpy((*l)->Info.Titre_Chapitre_Suivant, P->Suivant->Info.titre);
+                free(P);
+                dec_id((*l)->Suivant);
+            }
+            else
+            {
+                // cas 2.2: position non trouvé
+                Livre P = (*l)->Suivant;
+                Suprrimer_Chapitre(&P, pos - 1);
+            }
+        }
     }
 }
 
@@ -165,7 +215,8 @@ int main()
     Ajouter_Chapitre(&livre, 2);
 
     Afficher_Chapitre_Id(livre);
-    Modifier(livre, 2);
+    // Modifier(livre, 2);
+    Suprrimer_Chapitre(&livre, 1);
     Afficher_Chapitre_Id(livre);
     return 0;
 }
