@@ -119,12 +119,12 @@ void dec_id(Livre Q)
         dec_id(Q->Suivant);
     }
 }
-void Suprrimer_Chapitre(Livre *l, int pos)
+void Supprimer_Chapitre(Livre *l, int pos)
 {
     // cas 1: Liste vide donc ne rien faire
     if (*l != NULL)
     { // cas 2: liste non vide
-        // cas 2.1: suprrimer la tete
+        // cas 2.1: Supprimer la tete
         if (pos - 1 == 0)
         {
             Livre P = (*l);
@@ -152,7 +152,7 @@ void Suprrimer_Chapitre(Livre *l, int pos)
             {
                 // cas 2.2: position non trouvé
                 Livre P = (*l)->Suivant;
-                Suprrimer_Chapitre(&P, pos - 1);
+                Supprimer_Chapitre(&P, pos - 1);
             }
         }
     }
@@ -216,7 +216,7 @@ int main()
 
     Afficher_Chapitre_Id(livre);
     // Modifier(livre, 2);
-    Suprrimer_Chapitre(&livre, 1);
+    Supprimer_Chapitre(&livre, 1);
     Afficher_Chapitre_Id(livre);
     return 0;
 }
