@@ -6,10 +6,10 @@
 typedef struct Chapitre
 {
     int id;
-    char titre[50];
+    char titre[100];
     int nombres_pages;
     char contenu[1000];
-    char Titre_Chapitre_Suivant[50];
+    char Titre_Chapitre_Suivant[100];
 } Chapitre;
 
 typedef struct Element_Livre *Livre;
