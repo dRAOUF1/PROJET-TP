@@ -204,8 +204,40 @@ int Calculer_Nombre_Pages(Livre l)
     else
         return l->Info.nombres_pages + Calculer_Nombre_Pages(l->Suivant);
 }
-int main()
-{
+
+//fonction qui renvoie le plus grand chap
+Chapitre Plus_grand_chapitre(Livre L,Chapitre PGchap){
+    if (L->Suivant->Info.id == 1)
+    {
+        if (L->Info.nombres_pages > PGchap.nombres_pages ){
+        PGchap=L->Info;
+        }
+        return PGchap;
+    }
+    if (L->Info.nombres_pages > PGchap.nombres_pages )
+    {
+        PGchap=L->Info;
+    }
+    return Plus_grand_chapitre(L->Suivant, PGchap);
+    
+    
+    
+}
+
+/*fonction qui renvoie le plus petit chap
+Chapitre Plus_petit_chapitre(Livre L){
+
+}*/
+
+//fonction qui affiche les informations du plus grand et plus petit chapitre
+void Affiche_PGchap_PPchap(Livre L){
+    Chapitre PGchap,PPchap;
+    
+    PGchap=L->Info;
+    Plus_grand_chapitre(L,PGchap);
+    printf("%s",PGchap.titre);
+}
+int main(){
 
     Livre livre = NULL;
     
