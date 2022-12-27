@@ -110,6 +110,67 @@ void Afficher_Chapitre_Id(Livre l)
     }
 }
 
+// Fonction qui creer une copie de la liste
+Livre Copie(Livre l)
+{
+
+    if (l == NULL)
+        return NULL;
+    else if (l->Suivant->Info.id != 1)
+    {
+        Livre p = malloc(sizeof(Element_Livre));
+        p->Info = l->Info;
+        p->Suivant = Copie(l->Suivant);
+    }
+    else
+    {
+        return l;
+    }
+}
+
+// Fonction qui trie la liste par ordre croissant par rapport au nombre de pages
+void Trie_Pages(Livre *l, Livre *T)
+{ // T contient l'addresse de la tete de la litse donc l'appel se fera avec T=&l
+
+    // Livre p=Copie(*l);
+
+    // int id=(*l)->Info.id;
+    if ((*l)->Suivant->Info.id == (*l)->Info.id || *l == NULL) // cas 1:Liste vide ou a une element
+    {
+        return;
+    }
+    else if ((*l)->Suivant != *T)
+    {
+        Livre p = (*l)->Suivant, min = (*l);
+        while (p != *T)
+        {
+            if (min->Info.nombres_pages > p->Info.nombres_pages)
+                min = p;
+            p = p->Suivant;
+        }
+
+        if (min != NULL)
+        {
+            Chapitre chap = min->Info;
+            min->Info = (*l)->Info;
+            (*l)->Info = chap;
+        }
+        p = *l;
+        Trie_Pages(&p->Suivant, T);
+    }
+}
+void Afficher_Chapitre_Pages(Livre l, int id)
+{
+    //L'appel se fait avec id = l'id du 1er element de la liste
+    if (id == l->Suivant->Info.id)
+        Afficher_Chapitre(l->Info);
+    else
+    {
+        Afficher_Chapitre(l->Info);
+        Afficher_Chapitre_Pages(l->Suivant, id);
+    }
+}
+
 // Fonction qui decremonte les id apres l'insertion d'un chapitre si nécessaire
 void dec_id(Livre Q)
 {
@@ -130,11 +191,12 @@ void Supprimer_Chapitre(Livre *l, int pos)
             Livre P = (*l);
             // dec_id((*l)->Suivant);
             (*l) = (*l)->Suivant;
-            while(P->Suivant->Info.id!=1){
-                P=P->Suivant;
+            while (P->Suivant->Info.id != 1)
+            {
+                P = P->Suivant;
             }
-            P->Suivant=(*l);
-            strcpy(P->Info.Titre_Chapitre_Suivant,(*l)->Info.titre);
+            P->Suivant = (*l);
+            strcpy(P->Info.Titre_Chapitre_Suivant, (*l)->Info.titre);
             dec_id(*l);
         }
         else
@@ -212,11 +274,14 @@ int main()
     Ajouter_Chapitre(&livre, 1);
     Ajouter_Chapitre(&livre, 2);
 
-    Ajouter_Chapitre(&livre, 2);
+    Ajouter_Chapitre(&livre, 3);
 
     Afficher_Chapitre_Id(livre);
     // Modifier(livre, 2);
-    Supprimer_Chapitre(&livre, 1);
-    Afficher_Chapitre_Id(livre);
+    // Supprimer_Chapitre(&livre, 1);
+    // Livre P=Copie(livre);
+    Trie_Pages(&livre, &livre);
+    printf("\n\n================================\n");
+    Afficher_Chapitre_Pages(livre,livre->Info.id);
     return 0;
 }
