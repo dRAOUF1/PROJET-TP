@@ -25,11 +25,13 @@ Chapitre Creer_Chapitre()
 {
     Chapitre chap;
     printf("Donner le titre du chapite\n");
-    scanf("%s", &chap.titre);
+    fflush(stdin);
+    scanf("%[^\n]s", &chap.titre);
     printf("Donner le nombre de pages du chapitre\n");
     scanf("%d", &chap.nombres_pages);
     printf("Donner le contenu du chapitre\n");
-    scanf("%s", &chap.contenu);
+    fflush(stdin);
+    scanf("%[^\n]s", &chap.contenu);
     return chap;
 }
 
@@ -161,7 +163,7 @@ void Trie_Pages(Livre *l, Livre *T)
 }
 void Afficher_Chapitre_Pages(Livre l, int id)
 {
-    //L'appel se fait avec id = l'id du 1er element de la liste
+    // L'appel se fait avec id = l'id du 1er element de la liste
     if (id == l->Suivant->Info.id)
         Afficher_Chapitre(l->Info);
     else
@@ -232,7 +234,8 @@ void Modifier(Livre l, int id)
         if (strcmp(reponse, "oui") == 0)
         {
             printf("Donner le nouveau titre\n");
-            scanf("%s", l->Info.titre);
+            fflush(stdin);
+            scanf("%[^\n]s", l->Info.titre);
         }
 
         // modification du Contenu
@@ -242,7 +245,8 @@ void Modifier(Livre l, int id)
         if (strcmp(reponse, "oui") == 0)
         {
             printf("Donner le nouveau contenu\n");
-            scanf("%s", l->Info.contenu);
+            fflush(stdin);
+            scanf("%[^\n]", l->Info.contenu);
         }
 
         // modification du nombre de pages
@@ -252,7 +256,8 @@ void Modifier(Livre l, int id)
         if (strcmp(reponse, "oui") == 0)
         {
             printf("Donner le nouveau nombre de pages\n");
-            scanf("%s", l->Info.nombres_pages);
+            fflush(stdin);
+            scanf("%[^\n]s", l->Info.nombres_pages);
         }
     }
     else
@@ -282,6 +287,6 @@ int main()
     // Livre P=Copie(livre);
     Trie_Pages(&livre, &livre);
     printf("\n\n================================\n");
-    Afficher_Chapitre_Pages(livre,livre->Info.id);
+    Afficher_Chapitre_Pages(livre, livre->Info.id);
     return 0;
 }
