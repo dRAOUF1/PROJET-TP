@@ -29,11 +29,15 @@ Chapitre Creer_Chapitre()
 {
     Chapitre chap;
     printf("Donner le titre du chapite\n");
+    fflush(stdin);
     scanf("%s", &chap.titre);
+    fflush(stdin);
     printf("Donner le nombre de pages du chapitre\n");
     scanf("%d", &chap.nombres_pages);
     printf("Donner le contenu du chapitre\n");
+    fflush(stdin);
     scanf("%s", &chap.contenu);
+    fflush(stdin);
     return chap;
 }
 
@@ -61,9 +65,10 @@ void dec_id(Livre Q)
 void Afficher_Chapitre(Chapitre chap)
 {
     printf("\tChapitre %d: %s \n", chap.id, chap.titre);
-    printf("%d\n", chap.nombres_pages);
-    printf("%s\n", chap.contenu);
+    printf("\tNombre de pages: %d\n", chap.nombres_pages);
+    printf("\tContenu: %s\n", chap.contenu);
     printf("\tChapitre Suivant:%s\n\n", chap.Titre_Chapitre_Suivant);
+    printf("\t*******\n");
 }
 
 //fonction qui renvoie le plus grand chapitre
@@ -304,7 +309,9 @@ void Affiche_PGchap_PPchap(Livre L){
     Plus_grand_chapitre(L,&PGchap);
     PPchap=L->Info;
     Plus_petit_chapitre(L,&PPchap);
+    printf("L'affichage du plus grand chapitre:\n");
     Afficher_Chapitre(PGchap);
+    printf("L'affichage du plus petit chapitre:\n");
     Afficher_Chapitre(PPchap);
 }
 
@@ -314,7 +321,6 @@ int main(){
     
     Ajouter_Chapitre(&livre, 1);
     Ajouter_Chapitre(&livre, 2);
-    Ajouter_Chapitre(&livre, 3);
 
     Affiche_PGchap_PPchap(livre);   
     
