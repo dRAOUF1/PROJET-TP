@@ -3,24 +3,28 @@
 #include <string.h>
 
 // Definition des types
+
+// Structure de données qui represente les caractéristiques du chapitre
 typedef struct Chapitre
 {
-    int id;
-    char titre[100];
-    int nombres_pages;
-    char contenu[1000];
-    char Titre_Chapitre_Suivant[100];
+    int id;                           // Id (un entier positif qui représente le rang du chapitre).
+    char titre[100];                  // Titre du chapitre
+    int nombres_pages;                // Nombre de pages de chapitre (donné par l’auteur)
+    char contenu[1000];               // Cِontenu du chapitre
+    char Titre_Chapitre_Suivant[100]; // Titre du chapitre suivant
 } Chapitre;
 
+//Structure de données qui represente un livre composé de N chapitre
 typedef struct Element_Livre *Livre;
-
 typedef struct Element_Livre
 {
     Chapitre Info;
     Livre Suivant;
 } Element_Livre;
 
-// Creer un chapitre
+// Des actions parametrées pour rendre le code plus lisible et plus facile à manipuler
+
+// Création d'un chapitre
 Chapitre Creer_Chapitre()
 {
     Chapitre chap;
@@ -43,7 +47,60 @@ void inc_id(Livre Q)
     }
 }
 
-// Ajouter un chapitre dans le livre
+// Fonction qui decremonte les id apres l'insertion d'un chapitre si nécessaire
+void dec_id(Livre Q)
+{
+    if (Q->Info.id != 1)
+    {
+        Q->Info.id--;
+        dec_id(Q->Suivant);
+    }
+}
+
+// Afficher un chapitre dans le livre
+void Afficher_Chapitre(Chapitre chap)
+{
+    printf("\tChapitre %d: %s \n", chap.id, chap.titre);
+    printf("%d\n", chap.nombres_pages);
+    printf("%s\n", chap.contenu);
+    printf("\tChapitre Suivant:%s\n\n", chap.Titre_Chapitre_Suivant);
+}
+
+//fonction qui renvoie le plus grand chapitre
+Chapitre Plus_grand_chapitre(Livre L,Chapitre *PGchap){
+    if (L->Suivant->Info.id == 1)
+    {
+        if (strlen(L->Info.contenu) > strlen((*PGchap).contenu) ){
+        *PGchap=L->Info;
+        }
+        return *PGchap;
+    }
+    if (strlen(L->Info.contenu) > strlen((*PGchap).contenu) )
+    {
+        *PGchap=L->Info;
+    }
+    return Plus_grand_chapitre(L->Suivant, PGchap);    
+}
+
+//fonction qui renvoie le plus petit chapitre
+Chapitre Plus_petit_chapitre(Livre L, Chapitre *PPchap){
+    if (L->Suivant->Info.id == 1)
+    {
+        if (strlen(L->Info.contenu) < strlen((*PPchap).contenu) ){
+        *PPchap=L->Info;
+        }
+        return *PPchap;
+    }
+    if (strlen(L->Info.contenu) < strlen((*PPchap).contenu) )
+    {
+        *PPchap=L->Info;
+    }
+    return Plus_petit_chapitre(L->Suivant, PPchap);
+}
+
+// L'auteur peut à tout moment
+
+// Ajouter un chapitre (au début, au milieu ou à la fin).
 void Ajouter_Chapitre(Livre *livre, int pos)
 {
     Livre P;
@@ -93,12 +150,7 @@ void Ajouter_Chapitre(Livre *livre, int pos)
     }
 }
 
-void Afficher_Chapitre(Chapitre chap)
-{
-    printf("\tChapitre %d: %s \n", chap.id, chap.titre);
-    printf("%s\n", chap.contenu);
-    printf("\tChapitre Suivant:%s\n\n", chap.Titre_Chapitre_Suivant);
-}
+// Afficher les chapitres du livre en ordre croissant selon l'Id
 void Afficher_Chapitre_Id(Livre l)
 {
     if (l->Suivant->Info.id == 1)
@@ -110,15 +162,52 @@ void Afficher_Chapitre_Id(Livre l)
     }
 }
 
-// Fonction qui decremonte les id apres l'insertion d'un chapitre si nécessaire
-void dec_id(Livre Q)
-{
-    if (Q->Info.id != 1)
+// Afficher les chapitres du livre en ordre croissant selon le nombre de pages
+
+// Fonction qui trie la liste par ordre croissant par rapport au nombre de pages
+void Trie_Pages(Livre *l, Livre *T)
+{ // T contient l'addresse de la tete de la litse donc l'appel se fera avec T=&l
+
+    // Livre p=Copie(*l);
+
+    // int id=(*l)->Info.id;
+    if ((*l)->Suivant->Info.id == (*l)->Info.id || *l == NULL) // cas 1:Liste vide ou a une element
     {
-        Q->Info.id--;
-        dec_id(Q->Suivant);
+        return;
+    }
+    else if ((*l)->Suivant != *T)
+    {
+        Livre p = (*l)->Suivant, min = (*l);
+        while (p != *T)
+        {
+            if (min->Info.nombres_pages > p->Info.nombres_pages)
+                min = p;
+            p = p->Suivant;
+        }
+
+        if (min != NULL)
+        {
+            Chapitre chap = min->Info;
+            min->Info = (*l)->Info;
+            (*l)->Info = chap;
+        }
+        p = *l;
+        Trie_Pages(&p->Suivant, T);
     }
 }
+void Afficher_Chapitre_Pages(Livre l, int id)
+{
+    //L'appel se fait avec id = l'id du 1er element de la liste
+    if (id == l->Suivant->Info.id)
+        Afficher_Chapitre(l->Info);
+    else
+    {
+        Afficher_Chapitre(l->Info);
+        Afficher_Chapitre_Pages(l->Suivant, id);
+    }
+}
+
+//Supprimer un chapitre (le premier, le dernier ou le n-ème),
 void Supprimer_Chapitre(Livre *l, int pos)
 {
     // cas 1: Liste vide donc ne rien faire
@@ -158,6 +247,7 @@ void Supprimer_Chapitre(Livre *l, int pos)
     }
 }
 
+//Modifier le contenu d'un chapitre a partir de son Id.
 void Modifier(Livre l, int id)
 {
     if (l->Info.id == id)
@@ -197,6 +287,7 @@ void Modifier(Livre l, int id)
         Modifier(l->Suivant, id);
 }
 
+// Afficher le nombre de pages du livre.
 int Calculer_Nombre_Pages(Livre l)
 {
     if (l->Suivant->Info.id == 1)
@@ -205,38 +296,18 @@ int Calculer_Nombre_Pages(Livre l)
         return l->Info.nombres_pages + Calculer_Nombre_Pages(l->Suivant);
 }
 
-//fonction qui renvoie le plus grand chap
-Chapitre Plus_grand_chapitre(Livre L,Chapitre PGchap){
-    if (L->Suivant->Info.id == 1)
-    {
-        if (L->Info.nombres_pages > PGchap.nombres_pages ){
-        PGchap=L->Info;
-        }
-        return PGchap;
-    }
-    if (L->Info.nombres_pages > PGchap.nombres_pages )
-    {
-        PGchap=L->Info;
-    }
-    return Plus_grand_chapitre(L->Suivant, PGchap);
-    
-    
-    
-}
-
-/*fonction qui renvoie le plus petit chap
-Chapitre Plus_petit_chapitre(Livre L){
-
-}*/
-
-//fonction qui affiche les informations du plus grand et plus petit chapitre
+// Afficher les informations du plus grand et plus petit chapitre.
 void Affiche_PGchap_PPchap(Livre L){
     Chapitre PGchap,PPchap;
     
     PGchap=L->Info;
-    Plus_grand_chapitre(L,PGchap);
-    printf("%s",PGchap.titre);
+    Plus_grand_chapitre(L,&PGchap);
+    PPchap=L->Info;
+    Plus_petit_chapitre(L,&PPchap);
+    Afficher_Chapitre(PGchap);
+    Afficher_Chapitre(PPchap);
 }
+
 int main(){
 
     Livre livre = NULL;
@@ -244,9 +315,8 @@ int main(){
     Ajouter_Chapitre(&livre, 1);
     Ajouter_Chapitre(&livre, 2);
     Ajouter_Chapitre(&livre, 3);
-    Ajouter_Chapitre(&livre, 4);
 
-    Affiche_PGchap_PPchap(livre);
-   
+    Affiche_PGchap_PPchap(livre);   
+    
     return 0;
 }
