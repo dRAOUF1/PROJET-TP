@@ -415,55 +415,92 @@ int main()
     // la variable reponse contient la reponse de l'auteur
     int reponse;
     Livre livre = NULL;
+    int pos; // la position ou en insert
+    int T = Taille(livre);
+
     // creation d'un menu pour faciliter l'utilisation du programme
+
     printf("\t\tBienvenue\n\n");
     printf("Taper le chiffre correspondant a la fonctionnalite que vous voulez utiliser:\n");
     printf("1-Ajouter un chapitre.\n2-Afficher les chapitres du livre.\n3-Supprimer un chapitre du livre.\n4-Modifier le contenu d'un chapitre.\n5-Afficher le nombre de pages du livre.\n6-Afficher les information du plus grand et du plus petit chapitre.\n0-Pour quitter la programme\n");
     scanf("%d", &reponse);
 
     // appeler la fonction adequate selon la reponse de l'auteur
-
-    switch (reponse)
+    do
     {
-    case 1:
-        // Ajouter un chapitre
-        // la position ou en insert
-        int pos, T = Taille(livre);
-        do
+        switch (reponse)
         {
-            printf("Donner la position de l'insertion\n");
-            scanf("%d", &pos);
-        } while (pos <= 0 && pos > T + 1);
-        Ajouter_Chapitre(&livre, pos);
+        case 1:
+            // Ajouter un chapitre
+            do
+            {
+                printf("Donner la position de l'insertion\n");
+                scanf("%d", &pos);
+                if (pos <= 0 && pos > T + 1)
+                    printf("Postion incorrect veuillez reessayer\n");
+            } while (pos <= 0 && pos > T + 1);
+            Ajouter_Chapitre(&livre, pos);
 
-        break;
-    case 2:
-        // Afficher les chapitre d'un livre
+            break;
+        case 2:
+            // Afficher les chapitre d'un livre
+            printf("Voulez vous afficher selon l'ordre croissant des:\n1-IDs\n2-Nombres de pages\n3-Retour\n");
+            do
+            {
+                scanf("%d", &reponse);
+                if (reponse == 1)
+                    // cas 2.1:Afficher selon l'ordre  les IDs
+                    Afficher_Chapitre_Id(livre);
+                else if (reponse == 2)
+                    // cas 2.2:Afficher selon l'ordre
+                    Afficher_Chapitre_Pages(livre, livre->Info.id);
+                else if (reponse == 3)
+                    break;
+                else
+                    printf("Le chiffre entrer est incorrect\n");
+            } while (reponse != 1 && reponse != 2 && reponse != 3);
+            break;
+        case 3:;
+            // Supprimer un chapitre
+            do
+            {
+                printf("Donner la position du chapitre a supprimer (ou l'ID)\n");
+                scanf("%d", &pos);
+                if (pos < 0 && pos > T)
+                    printf("Postion incorrect veuillez reessayer\n");
+            } while (pos < 0 && pos > T);
+            Supprimer_Chapitre(&livre, pos);
 
-        break;
-    case 3:
-        // Supprimer un chapitre
+            break;
+        case 4:;
+            // Modifier le contenu d'un chapitre
+            do
+            {
+                printf("Donner la position du chapitre a modifer (ou l'ID)\n");
+                scanf("%d", &pos);
+                if (pos < 0 && pos > T)
+                    printf("Postion incorrect veuillez reessayer\n");
+            } while (pos < 0 && pos > T);
+            Modifier(livre, pos);
 
-        break;
-    case 4:
-        // Modifier le contenu d'un chapitre
+            break;
+        case 5:
+            // Afficher le nombre de pages du livre
+            printf("Le nombre de pages du livre est :%d\n", Calculer_Nombre_Pages(livre));
 
-        break;
-    case 5:
-        // Afficher le nombre de pages du livre
+            break;
+        case 6:
+            // Afficher les information du plus grand et du plus petit chapitre
+            Affiche_PGchap_PPchap(livre);
+            break;
+        case 0:
+            exit(0);
+            break;
+        default:
+            printf("Erreur vous avez entrer un mauvais chiffre\n");
+            break;
+        }
 
-        break;
-    case 6:
-        // Afficher les information du plus grand et du plus petit chapitre
-
-        break;
-    case 0:
-        exit(0);
-        break;
-    default:
-        printf("Erreur vous avez entrer un mauvais chiffre\n");
-        break;
-    }
-
+    } while (reponse != 0);
     return 0;
 }
