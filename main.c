@@ -72,13 +72,13 @@ void Afficher_Chapitre(Chapitre chap)
 }
 
 //fonction qui renvoie le plus grand chapitre
-Chapitre Plus_grand_chapitre(Livre L,Chapitre *PGchap){
+void Plus_grand_chapitre(Livre L,Chapitre *PGchap){
     if (L->Suivant->Info.id == 1)
     {
         if (strlen(L->Info.contenu) > strlen((*PGchap).contenu) ){
         *PGchap=L->Info;
         }
-        return *PGchap;
+        return;
     }
     if (strlen(L->Info.contenu) > strlen((*PGchap).contenu) )
     {
@@ -88,13 +88,13 @@ Chapitre Plus_grand_chapitre(Livre L,Chapitre *PGchap){
 }
 
 //fonction qui renvoie le plus petit chapitre
-Chapitre Plus_petit_chapitre(Livre L, Chapitre *PPchap){
+void Plus_petit_chapitre(Livre L, Chapitre *PPchap){
     if (L->Suivant->Info.id == 1)
     {
         if (strlen(L->Info.contenu) < strlen((*PPchap).contenu) ){
         *PPchap=L->Info;
         }
-        return *PPchap;
+        return;
     }
     if (strlen(L->Info.contenu) < strlen((*PPchap).contenu) )
     {
