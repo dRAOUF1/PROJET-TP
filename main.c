@@ -418,7 +418,7 @@ int main()
     // creation d'un menu pour faciliter l'utilisation du programme
     printf("\t\tBienvenue\n\n");
     printf("Taper le chiffre correspondant a la fonctionnalite que vous voulez utiliser:\n");
-    printf("1-Ajouter un chapitre.\n2-Afficher les chapitres du livre.\n3-Supprimer un chapitre du livre.\n4-Modifier le contenu d'un chapitre.\n5-Afficher le nombre de pages du livre.\n6-Afficher les information du plus grand et du plus petit chapitre.\n");
+    printf("1-Ajouter un chapitre.\n2-Afficher les chapitres du livre.\n3-Supprimer un chapitre du livre.\n4-Modifier le contenu d'un chapitre.\n5-Afficher le nombre de pages du livre.\n6-Afficher les information du plus grand et du plus petit chapitre.\n0-Pour quitter la programme\n");
     scanf("%d", &reponse);
 
     // appeler la fonction adequate selon la reponse de l'auteur
@@ -456,6 +456,9 @@ int main()
     case 6:
         // Afficher les information du plus grand et du plus petit chapitre
 
+        break;
+    case 0:
+        exit(0);
         break;
     default:
         printf("Erreur vous avez entrer un mauvais chiffre\n");
