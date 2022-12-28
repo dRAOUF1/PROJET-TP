@@ -79,6 +79,7 @@ void Afficher_Chapitre(Chapitre chap)
 // fonction qui renvoie le plus grand chapitre (avec le plus de caracteres)
 void Plus_grand_chapitre(Livre L, Chapitre *PGchap)
 {
+    // l'appel doit se faire avec PGchap = au premier chapitre du livre
 
     // cas de base : l'id du chapitre est égal a 1 donc on a parcouru toute le liste
     if (L->Suivant->Info.id == 1)
@@ -102,7 +103,8 @@ void Plus_grand_chapitre(Livre L, Chapitre *PGchap)
 // fonction qui renvoie le plus petit chapitre (avec le moins de caracteres)
 void Plus_petit_chapitre(Livre L, Chapitre *PPchap)
 {
-    // cas de base : l'id du chapitre est égal a 1 donc on a parcouru toute le liste
+    // l'appel doit se faire avec PPchap = au premier chapitre du livre
+    //  cas de base : l'id du chapitre est égal a 1 donc on a parcouru toute le liste
     if (L->Suivant->Info.id == 1)
     {
         // si la longueur du contenu du chapitre actuel est plus petite que celle du PGchap on remplace
@@ -386,18 +388,79 @@ void Affiche_PGchap_PPchap(Livre L)
 {
     Chapitre PGchap, PPchap;
 
+    // initialisation requise pour le fonctionnement de la procédure
     PGchap = L->Info;
-    Plus_grand_chapitre(L, &PGchap);
     PPchap = L->Info;
+    // Affichage
+    Plus_grand_chapitre(L, &PGchap);
     Plus_petit_chapitre(L, &PPchap);
-    printf("L'affichage du plus grand chapitre:\n");
+    printf("Le plus grand chapitre:\n");
     Afficher_Chapitre(PGchap);
-    printf("L'affichage du plus petit chapitre:\n");
+    printf("Le plus petit chapitre:\n");
     Afficher_Chapitre(PPchap);
 }
 
+// Fonction taille qui calcule le nombre de chapitres du livre (utilser pour verifier les entrees de l'utilisateur)
+int Taille(Livre l)
+{
+    if (l == NULL)
+        return 0;
+    else if (l->Suivant->Info.id == 1)
+        return 1;
+    else
+        return 1 + Taille(l->Suivant);
+}
 int main()
 {
+    // la variable reponse contient la reponse de l'auteur
+    int reponse;
+    Livre livre = NULL;
+    // creation d'un menu pour faciliter l'utilisation du programme
+    printf("\t\tBienvenue\n\n");
+    printf("Taper le chiffre correspondant a la fonctionnalite que vous voulez utiliser:\n");
+    printf("1-Ajouter un chapitre.\n2-Afficher les chapitres du livre.\n3-Supprimer un chapitre du livre.\n4-Modifier le contenu d'un chapitre.\n5-Afficher le nombre de pages du livre.\n6-Afficher les information du plus grand et du plus petit chapitre.\n");
+    scanf("%d", &reponse);
+
+    // appeler la fonction adequate selon la reponse de l'auteur
+
+    switch (reponse)
+    {
+    case 1:
+        // Ajouter un chapitre
+        // la position ou en insert
+        int pos, T = Taille(livre);
+        do
+        {
+            printf("Donner la position de l'insertion\n");
+            scanf("%d", &pos);
+        } while (pos <= 0 && pos > T + 1);
+        Ajouter_Chapitre(&livre, pos);
+
+        break;
+    case 2:
+        // Afficher les chapitre d'un livre
+
+        break;
+    case 3:
+        // Supprimer un chapitre
+
+        break;
+    case 4:
+        // Modifier le contenu d'un chapitre
+
+        break;
+    case 5:
+        // Afficher le nombre de pages du livre
+
+        break;
+    case 6:
+        // Afficher les information du plus grand et du plus petit chapitre
+
+        break;
+    default:
+        printf("Erreur vous avez entrer un mauvais chiffre\n");
+        break;
+    }
 
     return 0;
 }
