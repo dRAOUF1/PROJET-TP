@@ -375,6 +375,8 @@ void Modifier(Livre l, int id)
 // Afficher le nombre de pages du livre.
 int Calculer_Nombre_Pages(Livre l)
 {
+    if (l == NULL)
+        return 0;
     // cas de base: arrivé a le fin de la liste
     if (l->Suivant->Info.id == 1)
         return l->Info.nombres_pages;
