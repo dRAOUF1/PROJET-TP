@@ -30,14 +30,12 @@ Chapitre Creer_Chapitre()
     Chapitre chap;
     printf("Donner le titre du chapite\n");
     fflush(stdin);
-    scanf("%s", &chap.titre);
-    fflush(stdin);
+    scanf("%[^\n]s", &chap.titre);
     printf("Donner le nombre de pages du chapitre\n");
     scanf("%d", &chap.nombres_pages);
     printf("Donner le contenu du chapitre\n");
     fflush(stdin);
-    scanf("%s", &chap.contenu);
-    fflush(stdin);
+    scanf("%[^\n]s", &chap.contenu);
     return chap;
 }
 
@@ -167,7 +165,25 @@ void Afficher_Chapitre_Id(Livre l)
     }
 }
 
+
 // Afficher les chapitres du livre en ordre croissant selon le nombre de pages
+// Fonction qui creer une copie de la liste
+Livre Copie(Livre l)
+{
+
+    if (l == NULL)
+        return NULL;
+    else if (l->Suivant->Info.id != 1)
+    {
+        Livre p = malloc(sizeof(Element_Livre));
+        p->Info = l->Info;
+        p->Suivant = Copie(l->Suivant);
+    }
+    else
+    {
+        return l;
+    }
+}
 
 // Fonction qui trie la liste par ordre croissant par rapport au nombre de pages
 void Trie_Pages(Livre *l, Livre *T)
@@ -202,6 +218,19 @@ void Trie_Pages(Livre *l, Livre *T)
 }
 void Afficher_Chapitre_Pages(Livre l, int id)
 {
+    // L'appel se fait avec id = l'id du 1er element de la liste
+    if (id == l->Suivant->Info.id)
+        Afficher_Chapitre(l->Info);
+    else
+    {
+        Afficher_Chapitre(l->Info);
+        Afficher_Chapitre_Pages(l->Suivant, id);
+    }
+}
+
+// Fonction qui decremonte les id apres l'insertion d'un chapitre si nécessaire
+void dec_id(Livre Q)
+{
     //L'appel se fait avec id = l'id du 1er element de la liste
     if (id == l->Suivant->Info.id)
         Afficher_Chapitre(l->Info);
@@ -224,11 +253,12 @@ void Supprimer_Chapitre(Livre *l, int pos)
             Livre P = (*l);
             // dec_id((*l)->Suivant);
             (*l) = (*l)->Suivant;
-            while(P->Suivant->Info.id!=1){
-                P=P->Suivant;
+            while (P->Suivant->Info.id != 1)
+            {
+                P = P->Suivant;
             }
-            P->Suivant=(*l);
-            strcpy(P->Info.Titre_Chapitre_Suivant,(*l)->Info.titre);
+            P->Suivant = (*l);
+            strcpy(P->Info.Titre_Chapitre_Suivant, (*l)->Info.titre);
             dec_id(*l);
         }
         else
@@ -265,7 +295,8 @@ void Modifier(Livre l, int id)
         if (strcmp(reponse, "oui") == 0)
         {
             printf("Donner le nouveau titre\n");
-            scanf("%s", l->Info.titre);
+            fflush(stdin);
+            scanf("%[^\n]s", l->Info.titre);
         }
 
         // modification du Contenu
@@ -275,7 +306,8 @@ void Modifier(Livre l, int id)
         if (strcmp(reponse, "oui") == 0)
         {
             printf("Donner le nouveau contenu\n");
-            scanf("%s", l->Info.contenu);
+            fflush(stdin);
+            scanf("%[^\n]", l->Info.contenu);
         }
 
         // modification du nombre de pages
@@ -285,7 +317,8 @@ void Modifier(Livre l, int id)
         if (strcmp(reponse, "oui") == 0)
         {
             printf("Donner le nouveau nombre de pages\n");
-            scanf("%s", l->Info.nombres_pages);
+            fflush(stdin);
+            scanf("%[^\n]s", l->Info.nombres_pages);
         }
     }
     else
@@ -317,12 +350,5 @@ void Affiche_PGchap_PPchap(Livre L){
 
 int main(){
 
-    Livre livre = NULL;
-    
-    Ajouter_Chapitre(&livre, 1);
-    Ajouter_Chapitre(&livre, 2);
-
-    Affiche_PGchap_PPchap(livre);   
-    
     return 0;
 }
