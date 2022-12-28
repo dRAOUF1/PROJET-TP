@@ -227,20 +227,23 @@ void Trie_Pages(Livre *l, Livre *T)
 
     if ((*l)->Suivant->Info.id == (*l)->Info.id || *l == NULL)
     {
-        // cas 1:Liste vide ou a une element
+        // cas 1:Liste vide ou a un element
         // ne rien faire
         return;
     }
     // cas de base: arriver a la téte de liste envoyer a l'appel
+    // cas recursif
     else if ((*l)->Suivant != *T)
     {
         // initialiser p pour parcourir et min pour garder le minimum
         Livre p = (*l)->Suivant, min = (*l);
         // parcourir le livre en recherchant le min
-        while (p != *T)
+        while (p->Info.id != (*T)->Info.id)
         {
             if (min->Info.nombres_pages > p->Info.nombres_pages)
+            {
                 min = p;
+            }
             p = p->Suivant;
         }
 
@@ -278,6 +281,12 @@ void Supprimer_Chapitre(Livre *l, int pos)
     if (*l != NULL)
     { // cas 2: liste non vide
         // cas 2.1: Supprimer la tete
+        // cas 2.1.1: Supprimer une liste a 1 chapitre
+        if ((*l)->Suivant->Info.id == (*l)->Info.id)
+        {
+            free(*l);
+        }
+        // cas 2.1.2: Supprimer une liste a plusieur chapitres
         if (pos - 1 == 0)
         {
             Livre P = (*l);
@@ -328,10 +337,11 @@ void Supprimer_Chapitre(Livre *l, int pos)
 }
 
 // Modifier le contenu d'un chapitre a partir de son Id.
-void Modifier(Livre l, int id)
+void Modifier(Livre *l, int id)
 {
+    Livre P;
     // Cas de base: chapitre trouver
-    if (l->Info.id == id)
+    if ((*l)->Info.id == id)
     {
         char reponse[3];
         // modification du titre
@@ -342,7 +352,8 @@ void Modifier(Livre l, int id)
         {
             printf("Donner le nouveau titre\n");
             fflush(stdin);
-            scanf("%[^\n]s", l->Info.titre);
+            scanf("%[^\n]s", (*l)->Info.titre);
+            // modifier le  champs "titre du chapitre suivant" du precendent
         }
 
         // modification du Contenu
@@ -353,7 +364,7 @@ void Modifier(Livre l, int id)
         {
             printf("Donner le nouveau contenu\n");
             fflush(stdin);
-            scanf("%[^\n]", l->Info.contenu);
+            scanf("%[^\n]", (*l)->Info.contenu);
         }
 
         // modification du nombre de pages
@@ -363,13 +374,14 @@ void Modifier(Livre l, int id)
         if (strcmp(reponse, "oui") == 0)
         {
             printf("Donner le nouveau nombre de pages\n");
-            fflush(stdin);
-            scanf("%[^\n]s", l->Info.nombres_pages);
+            scanf("%d", &(*l)->Info.nombres_pages);
         }
     }
     else
-        // appel recursive pour avancer dans la liste
-        Modifier(l->Suivant, id);
+    { // appel recursive pour avancer dans la liste
+        P = (*l)->Suivant;
+        Modifier(&P, id);
+    }
 }
 
 // Afficher le nombre de pages du livre.
@@ -455,8 +467,12 @@ int main()
                         // cas 2.1:Afficher selon l'ordre  les IDs
                         Afficher_Chapitre_Id(livre);
                     else if (reponse == 2)
+                    {
                         // cas 2.2:Afficher selon l'ordre
-                        Afficher_Chapitre_Pages(livre, livre->Info.id);
+                        Livre CopieDuLivre = Copie(livre);
+                        Trie_Pages(&CopieDuLivre, &CopieDuLivre);
+                        Afficher_Chapitre_Pages(CopieDuLivre, CopieDuLivre->Info.id);
+                    }
                     else if (reponse == 3)
                         break;
                     else
@@ -494,7 +510,7 @@ int main()
                     if (pos < 1 || pos > Taille(livre))
                         printf("Postion incorrect veuillez reessayer\n");
                 } while (pos < 1 || pos > Taille(livre));
-                Modifier(livre, pos);
+                Modifier(&livre, pos);
             }
             else
                 printf("Erreur: Modification impossible le livre est vide\n");
