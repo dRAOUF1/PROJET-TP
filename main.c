@@ -228,19 +228,6 @@ void Afficher_Chapitre_Pages(Livre l, int id)
     }
 }
 
-// Fonction qui decremonte les id apres l'insertion d'un chapitre si nécessaire
-void dec_id(Livre Q)
-{
-    //L'appel se fait avec id = l'id du 1er element de la liste
-    if (id == l->Suivant->Info.id)
-        Afficher_Chapitre(l->Info);
-    else
-    {
-        Afficher_Chapitre(l->Info);
-        Afficher_Chapitre_Pages(l->Suivant, id);
-    }
-}
-
 //Supprimer un chapitre (le premier, le dernier ou le n-ème),
 void Supprimer_Chapitre(Livre *l, int pos)
 {
