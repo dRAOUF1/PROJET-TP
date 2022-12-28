@@ -416,18 +416,17 @@ int main()
     int reponse;
     Livre livre = NULL;
     int pos; // la position ou en insert
-    int T = Taille(livre);
 
     // creation d'un menu pour faciliter l'utilisation du programme
 
-    printf("\t\tBienvenue\n\n");
-    printf("Taper le chiffre correspondant a la fonctionnalite que vous voulez utiliser:\n");
-    printf("1-Ajouter un chapitre.\n2-Afficher les chapitres du livre.\n3-Supprimer un chapitre du livre.\n4-Modifier le contenu d'un chapitre.\n5-Afficher le nombre de pages du livre.\n6-Afficher les information du plus grand et du plus petit chapitre.\n0-Pour quitter la programme\n");
-    scanf("%d", &reponse);
+    printf("\t\tBienvenue");
 
     // appeler la fonction adequate selon la reponse de l'auteur
     do
     {
+        printf("\n\nTaper le chiffre correspondant a la fonctionnalite que vous voulez utiliser:\n");
+        printf("1-Ajouter un chapitre.\n2-Afficher les chapitres du livre.\n3-Supprimer un chapitre du livre.\n4-Modifier le contenu d'un chapitre.\n5-Afficher le nombre de pages du livre.\n6-Afficher les information du plus grand et du plus petit chapitre.\n0-Pour quitter la programme\n");
+        scanf("%d", &reponse);
         switch (reponse)
         {
         case 1:
@@ -435,53 +434,68 @@ int main()
             do
             {
                 printf("Donner la position de l'insertion\n");
-                scanf("%d", &pos);
-                if (pos <= 0 && pos > T + 1)
+                scanf(" %d", &pos);
+                if (pos < 1 || pos > Taille(livre) + 1)
                     printf("Postion incorrect veuillez reessayer\n");
-            } while (pos <= 0 && pos > T + 1);
+            } while (pos < 1 || pos > Taille(livre) + 1);
             Ajouter_Chapitre(&livre, pos);
 
             break;
         case 2:
             // Afficher les chapitre d'un livre
-            printf("Voulez vous afficher selon l'ordre croissant des:\n1-IDs\n2-Nombres de pages\n3-Retour\n");
-            do
+            if (Taille(livre) != 0) // si le livre est vide
             {
-                scanf("%d", &reponse);
-                if (reponse == 1)
-                    // cas 2.1:Afficher selon l'ordre  les IDs
-                    Afficher_Chapitre_Id(livre);
-                else if (reponse == 2)
-                    // cas 2.2:Afficher selon l'ordre
-                    Afficher_Chapitre_Pages(livre, livre->Info.id);
-                else if (reponse == 3)
-                    break;
-                else
-                    printf("Le chiffre entrer est incorrect\n");
-            } while (reponse != 1 && reponse != 2 && reponse != 3);
+                printf("Voulez vous afficher selon l'ordre croissant des:\n1-IDs\n2-Nombres de pages\n3-Retour\n");
+                do
+                {
+                    scanf("%d", &reponse);
+                    if (reponse == 1)
+                        // cas 2.1:Afficher selon l'ordre  les IDs
+                        Afficher_Chapitre_Id(livre);
+                    else if (reponse == 2)
+                        // cas 2.2:Afficher selon l'ordre
+                        Afficher_Chapitre_Pages(livre, livre->Info.id);
+                    else if (reponse == 3)
+                        break;
+                    else
+                        printf("Le chiffre entrer est incorrect veuillez reessayer\n");
+                } while (reponse != 1 && reponse != 2 && reponse != 3);
+            }
+            else
+                printf("Erreur: affichage impossible le livre est vide\n");
             break;
         case 3:;
             // Supprimer un chapitre
-            do
+            if (Taille(livre) != 0) // si le livre est vide
             {
-                printf("Donner la position du chapitre a supprimer (ou l'ID)\n");
-                scanf("%d", &pos);
-                if (pos < 0 && pos > T)
-                    printf("Postion incorrect veuillez reessayer\n");
-            } while (pos < 0 && pos > T);
-            Supprimer_Chapitre(&livre, pos);
+                do
+                {
+                    printf("Donner la position du chapitre a supprimer (ou l'ID)\n");
+                    scanf("%d", &pos);
+                    if (pos < 1 || pos > Taille(livre))
+                        printf("Postion incorrect veuillez reessayer\n");
+                } while (pos < 1 || pos > Taille(livre));
+                Supprimer_Chapitre(&livre, pos);
+            }
+            else
+                printf("Erreur: suppresion impossible le livre est vide\n");
 
             break;
         case 4:;
             // Modifier le contenu d'un chapitre
-            do
+            if (Taille(livre) != 0) // si le livre est vide
             {
-                printf("Donner la position du chapitre a modifer (ou l'ID)\n");
-                scanf("%d", &pos);
-                if (pos < 0 && pos > T)
-                    printf("Postion incorrect veuillez reessayer\n");
-            } while (pos < 0 && pos > T);
-            Modifier(livre, pos);
+                do
+                {
+                    printf("Donner la position du chapitre a modifer (ou l'ID)\n");
+                    scanf("%d", &pos);
+                    if (pos < 1 || pos > Taille(livre))
+                        printf("Postion incorrect veuillez reessayer\n");
+                } while (pos < 1 || pos > Taille(livre));
+                Modifier(livre, pos);
+            }
+            else
+                printf("Erreur: Modification impossible le livre est vide\n");
 
             break;
         case 5:
@@ -491,16 +505,19 @@ int main()
             break;
         case 6:
             // Afficher les information du plus grand et du plus petit chapitre
-            Affiche_PGchap_PPchap(livre);
+            if (Taille(livre) != 0) // si le livre est vide
+                Affiche_PGchap_PPchap(livre);
+            else
+                printf("Erreur: Affichage impossible le livre est vide\n");
             break;
         case 0:
             exit(0);
             break;
         default:
-            printf("Erreur vous avez entrer un mauvais chiffre\n");
+            printf("Erreur: vous avez entrer un mauvais chiffre\n");
             break;
         }
 
-    } while (reponse != 0);
+    } while (1 == 1);
     return 0;
 }
