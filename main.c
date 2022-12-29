@@ -154,20 +154,26 @@ void Ajouter_Chapitre(Livre *livre, int pos)
         // cas 1.2:Insertion au debut
         else
         {
+            //incrementer tout les IDs de la liste avant l'insertion au debut
             inc_id((*livre)->Suivant);
+            //incrementer la tete (La fonction n'incremente pas le tete)
             (*livre)->Info.id++;
-            P->Info=chap;
+            //remplire les informations de dans P
+            P->Info = chap;
             strcpy(P->Info.Titre_Chapitre_Suivant, (*livre)->Info.titre);
+            //gerer le chainage
             P->Suivant = *livre;
             *livre = P;
             // chercher la fin de la liste
-            P=(*livre)->Suivant;
+            P = (*livre)->Suivant;
             while (P->Suivant->Info.id != 2)
             {
                 P = P->Suivant;
             }
 
+            //enchainé le dernier element avec la tete (liste cirulaire)
             P->Suivant = *livre;
+            //remplire le champs titre chapitre suivant
             strcpy(P->Info.Titre_Chapitre_Suivant, (*livre)->Info.titre);
         }
     }
@@ -198,21 +204,6 @@ void Ajouter_Chapitre(Livre *livre, int pos)
             // incrementer les id des chapitres qui se trouvent apres le nouveau chapitre inserer
             inc_id(P->Suivant);
         }
-        /*         // cas 2.2:insertion au debut
-                else if (pos == 1)
-                {
-                    // Creer le chapitre
-                    Chapitre chap = Creer_Chapitre();
-
-                    P = malloc(sizeof(Element_Livre));
-                    // remplire le champs info de l'element de la liste par le chapitre que l'auteur veut ajouter
-                    P->Info = chap;
-                    P->Suivant=(*livre);
-                    *livre=P;
-                    //rechercher la fin
-
-                } */
-
         // cas 2.3:position non atteinte
         else
         { // stocker le pointeur livre dans un autre pointeur pour eviter de perdre la tete au 1er appel
@@ -301,11 +292,12 @@ void Trie_Pages(Livre *l)
         Trie_Pages(&p);
     }
 }
+
 void Afficher_Chapitre_Pages(Livre l, int id)
 {
     // L'appel se fait avec id = l'id du 1er element de la liste
 
-    // cas de base: arriver a la fin du livre
+    // cas de base: arriver a la fin de la copie du livre
     if (NULL == l->Suivant)
         Afficher_Chapitre(l->Info);
     else
