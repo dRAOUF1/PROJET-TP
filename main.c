@@ -130,22 +130,46 @@ void Ajouter_Chapitre(Livre *livre, int pos)
 {
     Livre P;
 
-    // cas 1: 1er chapitre d'un nouveau livre
-    if (*livre == NULL && pos == 1)
+    // cas 1: 1er chapitre d'un nouveau livre OU insertion au debut
+    if (pos == 1)
     {
         // Creer le chapitre
         Chapitre chap = Creer_Chapitre();
 
-        // remplire le champ titre du chapitre suivant (dans ce cas par le titre du chapitre lui meme car il n'y a qu'un seul chapitre)
-        strcpy(chap.Titre_Chapitre_Suivant, chap.titre);
         chap.id = 1;
 
         // creation de l'element de la liste
         P = malloc(sizeof(Element_Livre));
-        P->Info = chap;
-        P->Suivant = P;
-        // affecter l'element a la tete
-        (*livre) = P;
+        // cas 1.1: Liste vide
+        if (*livre == NULL)
+        {
+
+            P->Suivant = P;
+            // remplire le champ titre du chapitre suivant (dans ce cas par le titre du chapitre lui meme car il n'y a qu'un seul chapitre)
+            strcpy(chap.Titre_Chapitre_Suivant, chap.titre);
+            P->Info = chap;
+            // affecter l'element a la tete
+            (*livre) = P;
+        }
+        // cas 1.2:Insertion au debut
+        else
+        {
+            inc_id((*livre)->Suivant);
+            (*livre)->Info.id++;
+            P->Info=chap;
+            strcpy(P->Info.Titre_Chapitre_Suivant, (*livre)->Info.titre);
+            P->Suivant = *livre;
+            *livre = P;
+            // chercher la fin de la liste
+            P=(*livre)->Suivant;
+            while (P->Suivant->Info.id != 2)
+            {
+                P = P->Suivant;
+            }
+
+            P->Suivant = *livre;
+            strcpy(P->Info.Titre_Chapitre_Suivant, (*livre)->Info.titre);
+        }
     }
 
     // cas 2:livre deja existant
@@ -174,8 +198,22 @@ void Ajouter_Chapitre(Livre *livre, int pos)
             // incrementer les id des chapitres qui se trouvent apres le nouveau chapitre inserer
             inc_id(P->Suivant);
         }
+        /*         // cas 2.2:insertion au debut
+                else if (pos == 1)
+                {
+                    // Creer le chapitre
+                    Chapitre chap = Creer_Chapitre();
 
-        // cas 2.2:position non atteinte
+                    P = malloc(sizeof(Element_Livre));
+                    // remplire le champs info de l'element de la liste par le chapitre que l'auteur veut ajouter
+                    P->Info = chap;
+                    P->Suivant=(*livre);
+                    *livre=P;
+                    //rechercher la fin
+
+                } */
+
+        // cas 2.3:position non atteinte
         else
         { // stocker le pointeur livre dans un autre pointeur pour eviter de perdre la tete au 1er appel
             P = (*livre)->Suivant;
@@ -220,7 +258,7 @@ Livre Copie(Livre l)
         // cas 3: le livre contient 1 chapitre qu'on renvoie OU on est arrivé au dernier chapitre du livre
         Livre p = malloc(sizeof(Element_Livre));
         p->Info = l->Info;
-        p->Suivant=NULL;
+        p->Suivant = NULL;
         return p;
     }
 }
@@ -242,7 +280,7 @@ void Trie_Pages(Livre *l)
         // initialiser p pour parcourir et min pour garder le minimum
         Livre p = (*l)->Suivant, min = (*l);
         // parcourir le livre en recherchant le min
-        while (p->Suivant != NULL)
+        while (p != NULL)
         {
             if (min->Info.nombres_pages > p->Info.nombres_pages)
             {
@@ -461,7 +499,9 @@ int main()
             break;
         case 2:
             // Afficher les chapitre d'un livre
-            if (Taille(livre) != 0) // si le livre est vide
+            if (Taille(livre) == 1)
+                Afficher_Chapitre_Id(livre);
+            else if (Taille(livre) != 0) // si le livre n'est pas vide
             {
                 printf("Voulez vous afficher selon l'ordre croissant des:\n1-IDs\n2-Nombres de pages\n3-Retour\n");
                 do
