@@ -154,14 +154,14 @@ void Ajouter_Chapitre(Livre *livre, int pos)
         // cas 1.2:Insertion au debut
         else
         {
-            //incrementer tout les IDs de la liste avant l'insertion au debut
+            // incrementer tout les IDs de la liste avant l'insertion au debut
             inc_id((*livre)->Suivant);
-            //incrementer la tete (La fonction n'incremente pas le tete)
+            // incrementer la tete (La fonction n'incremente pas le tete)
             (*livre)->Info.id++;
-            //remplire les informations de dans P
+            // remplire les informations de dans P
             P->Info = chap;
             strcpy(P->Info.Titre_Chapitre_Suivant, (*livre)->Info.titre);
-            //gerer le chainage
+            // gerer le chainage
             P->Suivant = *livre;
             *livre = P;
             // chercher la fin de la liste
@@ -171,9 +171,9 @@ void Ajouter_Chapitre(Livre *livre, int pos)
                 P = P->Suivant;
             }
 
-            //enchainé le dernier element avec la tete (liste cirulaire)
+            // enchainé le dernier element avec la tete (liste cirulaire)
             P->Suivant = *livre;
-            //remplire le champs titre chapitre suivant
+            // remplire le champs titre chapitre suivant
             strcpy(P->Info.Titre_Chapitre_Suivant, (*livre)->Info.titre);
         }
     }
@@ -319,9 +319,10 @@ void Supprimer_Chapitre(Livre *l, int pos)
         if ((*l)->Suivant->Info.id == (*l)->Info.id)
         {
             free(*l);
+            *l = NULL;
         }
         // cas 2.1.2: Supprimer une liste a plusieur chapitres
-        if (pos - 1 == 0)
+        else if (pos - 1 == 0)
         {
             Livre P = (*l);
             // deplacer la tete au chapitre suivant
@@ -528,6 +529,12 @@ int main()
                     scanf("%d", &pos);
                     if (pos < 1 || pos > Taille(livre))
                         printf("Postion incorrect veuillez reessayer\n");
+                    else
+                    {
+                        printf("Confirmer la position \n");
+                        scanf("%d", &pos);
+                    };
+
                 } while (pos < 1 || pos > Taille(livre));
                 Supprimer_Chapitre(&livre, pos);
             }
