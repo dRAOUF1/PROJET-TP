@@ -213,19 +213,23 @@ Livre Copie(Livre l)
         // gestion du chainnage + appel recursive
         p->Info = l->Info;
         p->Suivant = Copie(l->Suivant);
+        return p;
     }
     else
     {
         // cas 3: le livre contient 1 chapitre qu'on renvoie OU on est arrivé au dernier chapitre du livre
-        return l;
+        Livre p = malloc(sizeof(Element_Livre));
+        p->Info = l->Info;
+        p->Suivant=NULL;
+        return p;
     }
 }
 
 // Fonction qui trie la liste par ordre croissant par rapport au nombre de pages
-void Trie_Pages(Livre *l, Livre *T)
+void Trie_Pages(Livre *l)
 { // T contient l'addresse de la tete de la litse donc l'appel se fera avec T=&l
 
-    if ((*l)->Suivant->Info.id == (*l)->Info.id || *l == NULL)
+    if ((*l)->Suivant == NULL || *l == NULL)
     {
         // cas 1:Liste vide ou a un element
         // ne rien faire
@@ -233,12 +237,12 @@ void Trie_Pages(Livre *l, Livre *T)
     }
     // cas de base: arriver a la téte de liste envoyer a l'appel
     // cas recursif
-    else if ((*l)->Suivant != *T)
+    else if ((*l)->Suivant != NULL)
     {
         // initialiser p pour parcourir et min pour garder le minimum
         Livre p = (*l)->Suivant, min = (*l);
         // parcourir le livre en recherchant le min
-        while (p->Info.id != (*T)->Info.id)
+        while (p->Suivant != NULL)
         {
             if (min->Info.nombres_pages > p->Info.nombres_pages)
             {
@@ -256,7 +260,7 @@ void Trie_Pages(Livre *l, Livre *T)
         // reinistialiser p au chapitre suivant pour comparer
         p = (*l)->Suivant;
         // appel recursive
-        Trie_Pages(&p, T);
+        Trie_Pages(&p);
     }
 }
 void Afficher_Chapitre_Pages(Livre l, int id)
@@ -470,7 +474,7 @@ int main()
                     {
                         // cas 2.2:Afficher selon l'ordre
                         Livre CopieDuLivre = Copie(livre);
-                        Trie_Pages(&CopieDuLivre, &CopieDuLivre);
+                        Trie_Pages(&CopieDuLivre);
                         Afficher_Chapitre_Pages(CopieDuLivre, CopieDuLivre->Info.id);
                     }
                     else if (reponse == 3)
