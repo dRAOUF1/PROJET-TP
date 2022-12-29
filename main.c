@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 // Definition des types
 
@@ -425,7 +426,8 @@ void Modifier(Livre *l, int id)
         scanf("%s", &reponse);
 
         // tester la reponse de l'auteur
-        if (strcmp(reponse, "oui") == 0)
+        if (strcmp(strlwr(reponse), "oui") == 0) 
+        //strlw transforme la chaine en minuscule pour facilité le test de la reponse (reponse = OUI,OUi,Oui...)
         {
             printf("Donner le nouveau titre\n");
             fflush(stdin);
@@ -448,7 +450,7 @@ void Modifier(Livre *l, int id)
         printf("Voulez-vous modifier le contenu du chapitre ?(oui/non)\n");
         scanf("%s", &reponse);
 
-        if (strcmp(reponse, "oui") == 0)
+        if (strcmp(strlwr(reponse), "oui") == 0)
         {
             printf("Donner le nouveau contenu\n");
             fflush(stdin);
@@ -459,7 +461,7 @@ void Modifier(Livre *l, int id)
         printf("Voulez-vous modifier le nombre de pages du chapitre ?(oui/non)\n");
         scanf("%s", &reponse);
 
-        if (strcmp(reponse, "oui") == 0)
+        if (strcmp(strlwr(reponse), "oui") == 0)
         {
             printf("Donner le nouveau nombre de pages\n");
             scanf("%d", &(*l)->Info.nombres_pages);
