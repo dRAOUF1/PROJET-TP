@@ -306,7 +306,7 @@ void Afficher_Chapitre_Pages(Livre l, int id)
     // L'appel se fait avec id = l'id du 1er element de la liste
 
     // cas de base: arriver a la fin du livre
-    if (id == l->Suivant->Info.id)
+    if (NULL == l->Suivant)
         Afficher_Chapitre(l->Info);
     else
     {
