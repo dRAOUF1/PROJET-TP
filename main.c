@@ -443,9 +443,9 @@ void Affiche_PGchap_PPchap(Livre L)
     // Affichage
     Plus_grand_chapitre(L, &PGchap);
     Plus_petit_chapitre(L, &PPchap);
-    printf("Le plus grand chapitre:\n\n");
+    printf("Le plus grand chapitre:\n");
     Afficher_Chapitre(PGchap);
-    printf("Le plus petit chapitre:\n\n");
+    printf("Le plus petit chapitre:\n");
     Afficher_Chapitre(PPchap);
 }
 
