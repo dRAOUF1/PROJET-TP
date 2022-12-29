@@ -529,11 +529,6 @@ int main()
                     scanf("%d", &pos);
                     if (pos < 1 || pos > Taille(livre))
                         printf("Postion incorrect veuillez reessayer\n");
-                    else
-                    {
-                        printf("Confirmer la position \n");
-                        scanf("%d", &pos);
-                    };
 
                 } while (pos < 1 || pos > Taille(livre));
                 Supprimer_Chapitre(&livre, pos);
