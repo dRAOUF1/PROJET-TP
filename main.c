@@ -16,6 +16,7 @@ typedef struct Chapitre
 
 // Structure de données qui represente un livre composé de N chapitre
 typedef struct Element_Livre *Livre;
+
 typedef struct Element_Livre
 {
     Chapitre Info;
@@ -47,6 +48,7 @@ void inc_id(Livre Q)
     {
         // Tant qu'on est pas arrivé a la fin en incremente
         Q->Info.id++;
+
         // appel recursive
         inc_id(Q->Suivant);
     }
@@ -60,6 +62,7 @@ void dec_id(Livre Q)
     {
         // Tant qu'on est pas arrivé a la fin en decremonte
         Q->Info.id--;
+
         // appel recursive
         dec_id(Q->Suivant);
     }
@@ -97,6 +100,7 @@ void Plus_grand_chapitre(Livre L, Chapitre *PGchap)
         *PGchap = L->Info;
     }
     // appel recursive
+
     Plus_grand_chapitre(L->Suivant, PGchap);
 }
 
@@ -119,6 +123,7 @@ void Plus_petit_chapitre(Livre L, Chapitre *PPchap)
     {
         *PPchap = L->Info;
     }
+
     // appel recursive
     return Plus_petit_chapitre(L->Suivant, PPchap);
 }
@@ -146,24 +151,31 @@ void Ajouter_Chapitre(Livre *livre, int pos)
 
             P->Suivant = P;
             // remplire le champ titre du chapitre suivant (dans ce cas par le titre du chapitre lui meme car il n'y a qu'un seul chapitre)
+
             strcpy(chap.Titre_Chapitre_Suivant, chap.titre);
             P->Info = chap;
+
             // affecter l'element a la tete
             (*livre) = P;
         }
+
         // cas 1.2:Insertion au debut
         else
         {
             // incrementer tout les IDs de la liste avant l'insertion au debut
             inc_id((*livre)->Suivant);
+
             // incrementer la tete (La fonction n'incremente pas le tete)
             (*livre)->Info.id++;
+
             // remplire les informations de dans P
             P->Info = chap;
             strcpy(P->Info.Titre_Chapitre_Suivant, (*livre)->Info.titre);
+
             // gerer le chainage
             P->Suivant = *livre;
             *livre = P;
+
             // chercher la fin de la liste
             P = (*livre)->Suivant;
             while (P->Suivant->Info.id != 2)
@@ -173,6 +185,7 @@ void Ajouter_Chapitre(Livre *livre, int pos)
 
             // enchainé le dernier element avec la tete (liste cirulaire)
             P->Suivant = *livre;
+
             // remplire le champs titre chapitre suivant
             strcpy(P->Info.Titre_Chapitre_Suivant, (*livre)->Info.titre);
         }
@@ -193,21 +206,26 @@ void Ajouter_Chapitre(Livre *livre, int pos)
 
             // gerer le titre du chapitre suivant du nouveau chapitre
             strcpy(P->Info.Titre_Chapitre_Suivant, (*livre)->Suivant->Info.titre);
+
             // gerer l'id du nouveau chapitre
             P->Info.id = (*livre)->Info.id + 1;
 
             // gerer le titre du chapitre suivant de l'ancien chapitre qui se trouvais a cette position
             strcpy((*livre)->Info.Titre_Chapitre_Suivant, P->Info.titre);
+
             // gerer le chainnage
             P->Suivant = (*livre)->Suivant;
             (*livre)->Suivant = P;
+
             // incrementer les id des chapitres qui se trouvent apres le nouveau chapitre inserer
             inc_id(P->Suivant);
         }
+
         // cas 2.3:position non atteinte
         else
         { // stocker le pointeur livre dans un autre pointeur pour eviter de perdre la tete au 1er appel
             P = (*livre)->Suivant;
+
             // appel recursive
             Ajouter_Chapitre(&P, pos - 1);
         }
@@ -217,11 +235,14 @@ void Ajouter_Chapitre(Livre *livre, int pos)
 // Afficher les chapitres du livre en ordre croissant selon l'Id
 void Afficher_Chapitre_Id(Livre l)
 {
+    // cas de base: Arriver a la fin
     if (l->Suivant->Info.id == 1)
         Afficher_Chapitre(l->Info);
     else
     {
         Afficher_Chapitre(l->Info);
+
+        // appel recursif
         Afficher_Chapitre_Id(l->Suivant);
     }
 }
@@ -235,13 +256,16 @@ Livre Copie(Livre l)
     // cas 1: la livre est vide
     if (l == NULL)
         return NULL;
+
     else if (l->Suivant->Info.id != 1)
     {
         // cas 2: parcourir le livre en creant une copie de chaque chapitre
         Livre p = malloc(sizeof(Element_Livre));
+
         // gestion du chainnage + appel recursive
         p->Info = l->Info;
         p->Suivant = Copie(l->Suivant);
+
         return p;
     }
     else
@@ -250,6 +274,7 @@ Livre Copie(Livre l)
         Livre p = malloc(sizeof(Element_Livre));
         p->Info = l->Info;
         p->Suivant = NULL;
+
         return p;
     }
 }
@@ -264,12 +289,15 @@ void Trie_Pages(Livre *l)
         // ne rien faire
         return;
     }
+
     // cas de base: arriver a la téte de liste envoyer a l'appel
+
     // cas recursif
     else if ((*l)->Suivant != NULL)
     {
         // initialiser p pour parcourir et min pour garder le minimum
         Livre p = (*l)->Suivant, min = (*l);
+
         // parcourir le livre en recherchant le min
         while (p != NULL)
         {
@@ -280,14 +308,11 @@ void Trie_Pages(Livre *l)
             p = p->Suivant;
         }
 
-        // if (min != NULL)
-        //{
         Chapitre chap = min->Info;
         min->Info = (*l)->Info;
         (*l)->Info = chap;
-        //}
-        // reinistialiser p au chapitre suivant pour comparer
         p = (*l)->Suivant;
+
         // appel recursive
         Trie_Pages(&p);
     }
@@ -303,6 +328,7 @@ void Afficher_Chapitre_Pages(Livre l, int id)
     else
     {
         Afficher_Chapitre(l->Info);
+
         // appel recursive
         Afficher_Chapitre_Pages(l->Suivant, id);
     }
@@ -315,22 +341,28 @@ void Supprimer_Chapitre(Livre *l, int pos)
     if (*l != NULL)
     { // cas 2: liste non vide
         // cas 2.1: Supprimer la tete
+
         // cas 2.1.1: Supprimer une liste a 1 chapitre
         if ((*l)->Suivant->Info.id == (*l)->Info.id)
         {
             free(*l);
             *l = NULL;
         }
+
         // cas 2.1.2: Supprimer une liste a plusieur chapitres
         else if (pos - 1 == 0)
         {
             Livre P = (*l);
+
             // deplacer la tete au chapitre suivant
             (*l) = (*l)->Suivant;
+
             // liberer l'ancienne tete
             free(P);
+
             // reinitialiser P
             P = (*l);
+
             // rechercher la fin de la liste
             while (P->Suivant->Info.id != 1)
             {
@@ -338,8 +370,10 @@ void Supprimer_Chapitre(Livre *l, int pos)
             }
             // gerer le chainnage entre la fin de la liste et le debut (liste circulaire)
             P->Suivant = (*l);
+
             // gerer le titre du chapitre suivant
             strcpy(P->Info.Titre_Chapitre_Suivant, (*l)->Info.titre);
+
             // decrementer les id de tout les elements se trouvant apres le chapitre supprimer si il y en a
             dec_id(*l);
         }
@@ -351,19 +385,23 @@ void Supprimer_Chapitre(Livre *l, int pos)
                 // gerer le chainnage
                 Livre P = (*l)->Suivant;
                 (*l)->Suivant = P->Suivant;
+
                 // gerer le titre suivant
                 strcpy((*l)->Info.Titre_Chapitre_Suivant, P->Suivant->Info.titre);
+
                 // liberer l'espace du chapitre detacher de la liste
                 free(P);
+
                 // decrementer les id de tout les elements se trouvant apres le chapitre supprimer si il y en a
                 dec_id((*l)->Suivant);
             }
             else
             {
                 // cas 2.3: position non trouvé
-                // stocker le pointeur livre dans un autre pointeur pour eviter de perdre la tete au 1er appel
 
+                // stocker le pointeur livre dans un autre pointeur pour eviter de perdre la tete au 1er appel
                 Livre P = (*l)->Suivant;
+
                 // appel recursive
                 Supprimer_Chapitre(&P, pos - 1);
             }
@@ -375,20 +413,35 @@ void Supprimer_Chapitre(Livre *l, int pos)
 void Modifier(Livre *l, int id)
 {
     Livre P;
+
     // Cas de base: chapitre trouver
+
     if ((*l)->Info.id == id)
     {
         char reponse[3];
+
         // modification du titre
         printf("Voulez-vous modifier le titre du chapitre ?(oui/non)\n");
         scanf("%s", &reponse);
 
+        // tester la reponse de l'auteur
         if (strcmp(reponse, "oui") == 0)
         {
             printf("Donner le nouveau titre\n");
             fflush(stdin);
             scanf("%[^\n]s", (*l)->Info.titre);
+
             // modifier le  champs "titre du chapitre suivant" du precendent
+
+            // Rechercher le precedent de l
+            Livre q = (*l)->Suivant;
+            while (q->Suivant->Info.id != (*l)->Info.id)
+            {
+                q = q->Suivant;
+            }
+
+            // copier le titre
+            strcpy(q->Info.Titre_Chapitre_Suivant, (*l)->Info.titre);
         }
 
         // modification du Contenu
@@ -413,7 +466,8 @@ void Modifier(Livre *l, int id)
         }
     }
     else
-    { // appel recursive pour avancer dans la liste
+    {
+        // appel recursive pour avancer dans la liste
         P = (*l)->Suivant;
         Modifier(&P, id);
     }
@@ -424,9 +478,11 @@ int Calculer_Nombre_Pages(Livre l)
 {
     if (l == NULL)
         return 0;
+
     // cas de base: arrivé a le fin de la liste
     if (l->Suivant->Info.id == 1)
         return l->Info.nombres_pages;
+
     else
         // appel recursive
         return l->Info.nombres_pages + Calculer_Nombre_Pages(l->Suivant);
@@ -440,11 +496,16 @@ void Affiche_PGchap_PPchap(Livre L)
     // initialisation requise pour le fonctionnement de la procédure
     PGchap = L->Info;
     PPchap = L->Info;
-    // Affichage
+
+    // Recuperer les PGchap et PPchap
     Plus_grand_chapitre(L, &PGchap);
     Plus_petit_chapitre(L, &PPchap);
+
+    // Affichage plus grand chapitre
     printf("Le plus grand chapitre:\n");
     Afficher_Chapitre(PGchap);
+
+    // Affichage plus petit chapitre
     printf("Le plus petit chapitre:\n");
     Afficher_Chapitre(PPchap);
 }
@@ -452,11 +513,16 @@ void Affiche_PGchap_PPchap(Livre L)
 // Fonction taille qui calcule le nombre de chapitres du livre (utilser pour verifier les entrees de l'utilisateur)
 int Taille(Livre l)
 {
+    // cas 1: liste vide
     if (l == NULL)
         return 0;
+
+    // cas 2: cas de base (Arriver a la fin)
     else if (l->Suivant->Info.id == 1)
         return 1;
+
     else
+        // appel recursive
         return 1 + Taille(l->Suivant);
 }
 int main()
