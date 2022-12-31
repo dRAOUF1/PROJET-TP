@@ -8,11 +8,11 @@
 // Structure de données qui represente les caractéristiques du chapitre
 typedef struct Chapitre
 {
-    int id;                           // Id (un entier positif qui représente le rang du chapitre).
-    char titre[100];                  // Titre du chapitre
-    int nombres_pages;                // Nombre de pages de chapitre (donné par l’auteur)
-    char contenu[1000];               // Cِontenu du chapitre
-    char Titre_Chapitre_Suivant[100]; // Titre du chapitre suivant
+    int id;                                              // Id (un entier positif qui représente le rang du chapitre).
+    char titre[100];                                     // Titre du chapitre
+    int nombres_pages;                                   // Nombre de pages de chapitre (donné par l’auteur)
+    char contenu[1000];                                  // Cِontenu du chapitre
+    char Titre_Chapitre_Suivant[100];                    // Titre du chapitre suivant
 } Chapitre;
 
 // Structure de données qui represente un livre composé de N chapitre
@@ -322,6 +322,10 @@ void Trie_Pages(Livre *l)
 void Afficher_Chapitre_Pages(Livre l, int id)
 {
     // L'appel se fait avec id = l'id du 1er element de la liste
+    // Cette fonction fonctionne uniquement en utilisant les fonction copie et Trie_Pages
+    // L'appel des deux fonctions fonction n'a pas été fais ici a cause du fait qu'elle est recursive
+    // Ce qui conduira a la creation et au trie de plusieurs copies inutillement
+    // Dans le cas ou cette fonction serait itérative l'appel se fera dedans
 
     // cas de base: arriver a la fin de la copie du livre
     if (NULL == l->Suivant)
@@ -527,6 +531,7 @@ int Taille(Livre l)
         // appel recursive
         return 1 + Taille(l->Suivant);
 }
+
 int main()
 {
     // la variable reponse contient la reponse de l'auteur
@@ -643,5 +648,6 @@ int main()
         }
 
     } while (1 == 1);
+    
     return 0;
 }
