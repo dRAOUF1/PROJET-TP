@@ -80,55 +80,6 @@ void Afficher_Chapitre(Chapitre chap)
     printf("\t*******\n");
 }
 
-// fonction qui renvoie le plus grand chapitre (avec le plus de caracteres)
-void Plus_grand_chapitre(Livre L, Chapitre *PGchap)
-{
-    // l'appel doit se faire avec PGchap = au premier chapitre du livre
-
-    // cas de base : l'id du chapitre est égal a 1 donc on a parcouru toute le liste
-    if (L->Suivant->Info.id == 1)
-    {
-        // si la longueur du contenu du chapitre actuel est plus grande que celle du PGchap on remplace
-        if (strlen(L->Info.contenu) > strlen((*PGchap).contenu))
-        {
-            *PGchap = L->Info;
-        }
-        return;
-    }
-    // si la longueur du contenu du chapitre actuel est plus grande que celle du PGchap on remplace
-    if (strlen(L->Info.contenu) > strlen((*PGchap).contenu))
-    {
-        *PGchap = L->Info;
-    }
-    // appel recursive
-
-    Plus_grand_chapitre(L->Suivant, PGchap);
-}
-
-// fonction qui renvoie le plus petit chapitre (avec le moins de caracteres)
-void Plus_petit_chapitre(Livre L, Chapitre *PPchap)
-{
-    // l'appel doit se faire avec PPchap = au premier chapitre du livre
-    //  cas de base : l'id du chapitre est égal a 1 donc on a parcouru toute le liste
-    if (L->Suivant->Info.id == 1)
-    {
-        // si la longueur du contenu du chapitre actuel est plus petite que celle du PGchap on remplace
-        if (strlen(L->Info.contenu) < strlen((*PPchap).contenu))
-        {
-            *PPchap = L->Info;
-        }
-        return;
-    }
-    // si la longueur du contenu du chapitre actuel est plus petite que celle du PGchap on remplace
-    if (strlen(L->Info.contenu) < strlen((*PPchap).contenu))
-    {
-        *PPchap = L->Info;
-    }
-
-    // appel recursive
-    return Plus_petit_chapitre(L->Suivant, PPchap);
-}
-
 // L'auteur peut à tout moment
 
 // Ajouter un chapitre (au début, au milieu ou à la fin).
@@ -351,14 +302,14 @@ void Supprimer_Chapitre(Livre *l, int pos)
     { // cas 2: liste non vide
         // cas 2.1: Supprimer la tete
 
-        // cas 2.1.1: Supprimer une liste a 1 chapitre
+        // cas 2.1.1: Supprimer la tete d'une liste a 1 chapitre
         if ((*l)->Suivant->Info.id == (*l)->Info.id)
         {
             free(*l);
             *l = NULL;
         }
 
-        // cas 2.1.2: Supprimer une liste a plusieur chapitres
+        // cas 2.1.2: Supprimer la tete d'une liste a plusieur chapitres
         else if (pos - 1 == 0)
         {
             Livre P = (*l);
@@ -496,6 +447,51 @@ int Calculer_Nombre_Pages(Livre l)
     else
         // appel recursive
         return l->Info.nombres_pages + Calculer_Nombre_Pages(l->Suivant);
+}
+
+// fonction qui renvoie le plus grand chapitre (avec le plus de caracteres)
+void Plus_grand_chapitre(Livre L, Chapitre *PGchap)
+{
+    // l'appel doit se faire avec PGchap = au premier chapitre du livre
+
+    // si la longueur du contenu du chapitre actuel est plus grande que celle du PGchap on remplace
+    if (strlen(L->Info.contenu) > strlen((*PGchap).contenu))
+    {
+        *PGchap = L->Info;
+    }
+
+    // cas de base : l'id du chapitre est égal a 1 donc on a parcouru toute le liste
+    if (L->Suivant->Info.id == 1)
+    {
+        return;
+    }
+    else
+    {
+        // appel recursive
+        Plus_grand_chapitre(L->Suivant, PGchap);
+    }
+}
+
+// fonction qui renvoie le plus petit chapitre (avec le moins de caracteres)
+void Plus_petit_chapitre(Livre L, Chapitre *PPchap)
+{
+    // l'appel doit se faire avec PPchap = au premier chapitre du livre
+    // si la longueur du contenu du chapitre actuel est plus petite que celle du PGchap on remplace
+    if (strlen(L->Info.contenu) < strlen((*PPchap).contenu))
+    {
+        *PPchap = L->Info;
+    }
+    
+    //  cas de base : l'id du chapitre est égal a 1 donc on a parcouru toute le liste
+    if (L->Suivant->Info.id == 1)
+    {
+        return;
+    }
+    else
+    { 
+        // appel recursive
+        Plus_petit_chapitre(L->Suivant, PPchap);
+    }
 }
 
 // Afficher les informations du plus grand et plus petit chapitre.
