@@ -265,6 +265,7 @@ Livre Copie(Livre l)
 
         // gestion du chainnage + appel recursive
         p->Info = l->Info;
+        // appel recursive
         p->Suivant = Copie(l->Suivant);
 
         return p;
@@ -319,13 +320,9 @@ void Trie_Pages(Livre *l)
     }
 }
 
-void Afficher_Chapitre_Pages(Livre l, int id)
+void Afficher_Copie_Trie(Livre l, int id)
 {
     // L'appel se fait avec id = l'id du 1er element de la liste
-    // Cette fonction fonctionne uniquement en utilisant les fonctions copie et Trie_Pages
-    // L'appel des deux fonctions n'a pas été fais ici à cause du fait qu'elle est recursive
-    // Ce qui conduira a la creation et au trie de plusieurs copies inutillement
-    // Dans le cas ou cette fonction serait itérative l'appel se fera dedans
 
     // cas de base: arriver a la fin de la copie du livre
     if (NULL == l->Suivant)
@@ -335,8 +332,15 @@ void Afficher_Chapitre_Pages(Livre l, int id)
         Afficher_Chapitre(l->Info);
 
         // appel recursive
-        Afficher_Chapitre_Pages(l->Suivant, id);
+        Afficher_Copie_Trie(l->Suivant, id);
     }
+}
+
+void Afficher_Chapitre_Pages(Livre l)
+{
+    Livre CopieDuLivre = Copie(l);
+    Trie_Pages(&CopieDuLivre);
+    Afficher_Copie_Trie(CopieDuLivre, CopieDuLivre->Info.id);
 }
 
 // Supprimer un chapitre (le premier, le dernier ou le n-ème),
@@ -578,9 +582,7 @@ int main()
                     else if (reponse == 2)
                     {
                         // cas 2.2:Afficher selon l'ordre
-                        Livre CopieDuLivre = Copie(livre);
-                        Trie_Pages(&CopieDuLivre);
-                        Afficher_Chapitre_Pages(CopieDuLivre, CopieDuLivre->Info.id);
+                        Afficher_Chapitre_Pages(livre);
                     }
                     else if (reponse == 3)
                         break;
