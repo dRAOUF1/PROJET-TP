@@ -531,6 +531,7 @@ int Taille(Livre l)
         // appel recursive
         return 1 + Taille(l->Suivant);
 }
+
 int main()
 {
     // la variable reponse contient la reponse de l'auteur
@@ -631,7 +632,7 @@ int main()
             break;
         case 6:
             // Afficher les information du plus grand et du plus petit chapitre
-            if (Taille(livre) != 0) // si le livre est vide
+            if (Taille(livre) != 0) // si le livre n'est pas vide
                 Affiche_PGchap_PPchap(livre);
             else
                 printf("Erreur: Affichage impossible le livre est vide\n");
