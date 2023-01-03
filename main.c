@@ -271,6 +271,7 @@ void Trie_Pages(Livre *l)
     }
 }
 
+//Fonction qui affiche la copie triée
 void Afficher_Copie_Trie(Livre l, int id)
 {
     // L'appel se fait avec id = l'id du 1er element de la liste
@@ -287,6 +288,7 @@ void Afficher_Copie_Trie(Livre l, int id)
     }
 }
 
+//Fonction qui affiche les chapitre par ordre croissant selon le nombre de pages
 void Afficher_Chapitre_Pages(Livre l)
 {
     Livre CopieDuLivre = Copie(l);
@@ -559,13 +561,13 @@ int main()
                 scanf(" %d", &pos);
                 if (pos < 1 || pos > Taille(livre) + 1)
                     printf("Postion incorrect veuillez reessayer\n");
-            } while (pos < 1 || pos > Taille(livre) + 1);
+            } while (pos < 1 || pos > Taille(livre) + 1); //  1<=pos<=Taille + 1
             Ajouter_Chapitre(&livre, pos);
 
             break;
         case 2:
             // Afficher les chapitre d'un livre
-            if (Taille(livre) == 1)
+            if (Taille(livre) == 1)  //Si le livre contient 1 chapitre l'ordre n'est pas important
                 Afficher_Chapitre_Id(livre);
             else if (Taille(livre) != 0) // si le livre n'est pas vide
             {
@@ -585,23 +587,23 @@ int main()
                         break;
                     else
                         printf("Le chiffre entrer est incorrect veuillez reessayer\n");
-                } while (reponse != 1 && reponse != 2 && reponse != 3);
+                } while (reponse != 1 && reponse != 2 && reponse != 3); //la reponse doit etre egale a 1,2 ou 3.
             }
             else
-                printf("Erreur: affichage impossible le livre est vide\n");
+                printf("Erreur: affichage impossible le livre est vide\n"); //si le livre est vide
             break;
         case 3:;
             // Supprimer un chapitre
-            if (Taille(livre) != 0) // si le livre est vide
+            if (Taille(livre) != 0) // si le livre n'est pas vide
             {
                 do
                 {
                     printf("Donner la position du chapitre a supprimer (ou l'ID)\n");
                     scanf("%d", &pos);
-                    if (pos < 1 || pos > Taille(livre))
+                    if (pos < 1 || pos > Taille(livre)) //1<=pos<=Taille
                         printf("Postion incorrect veuillez reessayer\n");
 
-                } while (pos < 1 || pos > Taille(livre));
+                } while (pos < 1 || pos > Taille(livre)); //1<=pos<=Taille 
                 Supprimer_Chapitre(&livre, pos);
             }
             else
@@ -610,15 +612,15 @@ int main()
             break;
         case 4:;
             // Modifier le contenu d'un chapitre
-            if (Taille(livre) != 0) // si le livre est vide
+            if (Taille(livre) != 0) // si le livre n'est vide
             {
                 do
                 {
                     printf("Donner la position du chapitre a modifer (ou l'ID)\n");
                     scanf("%d", &pos);
-                    if (pos < 1 || pos > Taille(livre))
+                    if (pos < 1 || pos > Taille(livre)) //1<=pos<=Taille
                         printf("Postion incorrect veuillez reessayer\n");
-                } while (pos < 1 || pos > Taille(livre));
+                } while (pos < 1 || pos > Taille(livre)); //1<=pos<=Taille
                 Modifier(&livre, pos);
             }
             else
