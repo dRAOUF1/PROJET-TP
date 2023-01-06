@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 // Definition des types
 
@@ -271,7 +270,7 @@ void Trie_Pages(Livre *l)
     }
 }
 
-//Fonction qui affiche la copie triée
+// Fonction qui affiche la copie triée
 void Afficher_Copie_Trie(Livre l, int id)
 {
     // L'appel se fait avec id = l'id du 1er element de la liste
@@ -288,7 +287,7 @@ void Afficher_Copie_Trie(Livre l, int id)
     }
 }
 
-//Fonction qui affiche les chapitre par ordre croissant selon le nombre de pages
+// Fonction qui affiche les chapitre par ordre croissant selon le nombre de pages
 void Afficher_Chapitre_Pages(Livre l)
 {
     Livre CopieDuLivre = Copie(l);
@@ -457,6 +456,7 @@ void Plus_grand_chapitre(Livre L, Chapitre *PGchap)
     // l'appel doit se faire avec PGchap = au premier chapitre du livre
 
     // si la longueur du contenu du chapitre actuel est plus grande que celle du PGchap on remplace
+    // Dans le cas ou les nombres de caractere des deux chapitre sont egaux on garde le 1er
     if (strlen(L->Info.contenu) > strlen((*PGchap).contenu))
     {
         *PGchap = L->Info;
@@ -479,18 +479,20 @@ void Plus_petit_chapitre(Livre L, Chapitre *PPchap)
 {
     // l'appel doit se faire avec PPchap = au premier chapitre du livre
     // si la longueur du contenu du chapitre actuel est plus petite que celle du PGchap on remplace
+    // Dans le cas ou les nombres de caractere des deux chapitre sont egaux on garde le 1er
+
     if (strlen(L->Info.contenu) < strlen((*PPchap).contenu))
     {
         *PPchap = L->Info;
     }
-    
+
     //  cas de base : l'id du chapitre est égal a 1 donc on a parcouru toute le liste
     if (L->Suivant->Info.id == 1)
     {
         return;
     }
     else
-    { 
+    {
         // appel recursive
         Plus_petit_chapitre(L->Suivant, PPchap);
     }
@@ -550,6 +552,7 @@ int main()
     {
         printf("\n\nTaper le chiffre correspondant a la fonctionnalite que vous voulez utiliser:\n");
         printf("1-Ajouter un chapitre.\n2-Afficher les chapitres du livre.\n3-Supprimer un chapitre du livre.\n4-Modifier le contenu d'un chapitre.\n5-Afficher le nombre de pages du livre.\n6-Afficher les information du plus grand et du plus petit chapitre.\n0-Pour quitter la programme\n");
+        fflush(stdin); // pour eviter une boucle infinie dans le cas ou l'auteur entre un charcatere au lieu d'un entier
         scanf("%d", &reponse);
         switch (reponse)
         {
@@ -558,6 +561,7 @@ int main()
             do
             {
                 printf("Donner la position de l'insertion\n");
+                fflush(stdin); // pour eviter une boucle infinie dans le cas ou l'auteur entre un charcatere au lieu d'un entier
                 scanf(" %d", &pos);
                 if (pos < 1 || pos > Taille(livre) + 1)
                     printf("Postion incorrect veuillez reessayer\n");
@@ -567,13 +571,14 @@ int main()
             break;
         case 2:
             // Afficher les chapitre d'un livre
-            if (Taille(livre) == 1)  //Si le livre contient 1 chapitre l'ordre n'est pas important
+            if (Taille(livre) == 1) // Si le livre contient 1 chapitre l'ordre n'est pas important
                 Afficher_Chapitre_Id(livre);
             else if (Taille(livre) != 0) // si le livre n'est pas vide
             {
                 printf("Voulez vous afficher selon l'ordre croissant des:\n1-IDs\n2-Nombres de pages\n3-Retour\n");
                 do
                 {
+                    fflush(stdin); // pour eviter une boucle infinie dans le cas ou l'auteur entre un charcatere au lieu d'un entier
                     scanf("%d", &reponse);
                     if (reponse == 1)
                         // cas 2.1:Afficher selon l'ordre  les IDs
@@ -587,10 +592,10 @@ int main()
                         break;
                     else
                         printf("Le chiffre entrer est incorrect veuillez reessayer\n");
-                } while (reponse != 1 && reponse != 2 && reponse != 3); //la reponse doit etre egale a 1,2 ou 3.
+                } while (reponse != 1 && reponse != 2 && reponse != 3); // la reponse doit etre egale a 1,2 ou 3.
             }
             else
-                printf("Erreur: affichage impossible le livre est vide\n"); //si le livre est vide
+                printf("Erreur: affichage impossible le livre est vide\n"); // si le livre est vide
             break;
         case 3:;
             // Supprimer un chapitre
@@ -599,11 +604,12 @@ int main()
                 do
                 {
                     printf("Donner la position du chapitre a supprimer (ou l'ID)\n");
+                    fflush(stdin); // pour eviter une boucle infinie dans le cas ou l'auteur entre un charcatere au lieu d'un entier
                     scanf("%d", &pos);
-                    if (pos < 1 || pos > Taille(livre)) //1<=pos<=Taille
+                    if (pos < 1 || pos > Taille(livre)) // 1<=pos<=Taille
                         printf("Postion incorrect veuillez reessayer\n");
 
-                } while (pos < 1 || pos > Taille(livre)); //1<=pos<=Taille 
+                } while (pos < 1 || pos > Taille(livre)); // 1<=pos<=Taille
                 Supprimer_Chapitre(&livre, pos);
             }
             else
@@ -617,10 +623,11 @@ int main()
                 do
                 {
                     printf("Donner la position du chapitre a modifer (ou l'ID)\n");
+                    fflush(stdin); // pour eviter une boucle infinie dans le cas ou l'auteur entre un charcatere au lieu d'un entier
                     scanf("%d", &pos);
-                    if (pos < 1 || pos > Taille(livre)) //1<=pos<=Taille
+                    if (pos < 1 || pos > Taille(livre)) // 1<=pos<=Taille
                         printf("Postion incorrect veuillez reessayer\n");
-                } while (pos < 1 || pos > Taille(livre)); //1<=pos<=Taille
+                } while (pos < 1 || pos > Taille(livre)); // 1<=pos<=Taille
                 Modifier(&livre, pos);
             }
             else
@@ -640,6 +647,7 @@ int main()
                 printf("Erreur: Affichage impossible le livre est vide\n");
             break;
         case 0:
+            // quitter le programme
             exit(0);
             break;
         default:
@@ -647,6 +655,6 @@ int main()
             break;
         }
 
-    } while (1 == 1);
+    } while (1 == 1); // Boucle infinie pour reafficher le menu jusqu'a ce que l'utilisateur entre '0' pour quitter le programme
     return 0;
 }
